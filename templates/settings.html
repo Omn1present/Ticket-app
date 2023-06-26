@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="subh">Settings</h1>
+{% if form.errors %}
+{% for field, errors in form.errors.items() %}
+{% for error in errors %}
+<div class="alert"><span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>{{ error }}
+</div>
+{% endfor %}
+{% endfor %}
+{% endif %}
+<div class="settings-container">
+    <h3 class="subh">Account</h3>
+    <ul>
+        <br>
+        <li> <h4>Change password</h4></li>
+        <br>
+        
+        <form action="{{ url_for('settings') }}" method="POST">
+            {{ form.csrf_token }}
+            {{ form.old_password.label }} {{ form.old_password }}
+            {{ form.new_password.label }} {{ form.new_password }}
+            {{ form.confirm_password.label }} {{ form.confirm_password }}
+            <button type="submit">Commit the changes</button>
+        </form>
+        <li><a href="{{ url_for('delete_account') }}"> <h4>Delete account (WARNING: THERE IS NO CONFIRMATION) </h4></a></li>
+        <br>
+    </ul>
+    <h3 class="subh">Appearance</h3>
+    <br>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    {% if session['theme'] == 'dark' %}
+    <a href="{{ url_for('toggle_theme', theme='light') }}">Light Mode</a>
+    {% else %}
+    <a href="{{ url_for('toggle_theme', theme='dark') }}">Dark Mode</a>
+    {% endif %}
+    <br>
+</div>
+{% endblock %}

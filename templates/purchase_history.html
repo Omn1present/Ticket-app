@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="subh">Purchase History</h1>
+<table>
+    <thead class="subh">
+        <tr>
+            <th>Event</th>
+            <th>Date purchased</th>
+            <th>Ticket</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for purchase in purchases %}
+        <tr>
+            <td>{{ purchase[0].event.name }}</td>
+            <td>{{ purchase[1].strftime("%H:%M %d-%m-%Y") }}</td>
+            <td>{{ purchase[0].name }}</td>
+            <td>${{ purchase[0].price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

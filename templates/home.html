@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="subh">Upcoming Events</h1>
+
+<form id="search" action="{{ url_for('home') }}" method="GET">
+    <input type="text" name="search" placeholder="Search...">
+    <button type="button" id="filterbtn">Options +</button>
+    <label class="filters1" for="price_min">Price Min:</label>
+    <input class="filters2" type="number" name="price_min" min="0" step="1">
+    <label class="filters1" for="price_max">Price Max:</label>
+    <input class="filters2" type="number" name="price_max" min="0" step="1">
+    <label class="filters1" for="date_start">Date Start:</label>
+    <input class="filters2" type="date" name="date_start">
+    <label class="filters1" for="date_end">Date End:</label>
+    <input class="filters2" type="date" name="date_end">
+    <button type="submit">Search</button>
+</form>
+<script>
+    var btn = document.getElementById("filterbtn")
+    var filters1= Array.prototype.slice.call(document.getElementsByClassName("filters1"),0);
+    var filters2 = Array.prototype.slice.call(document.getElementsByClassName("filters2"),0);
+    elements=filters1.concat(filters2);
+    btn.addEventListener("click",function(){
+        if (elements[0].style.display==="block"){
+            for(let i=0;i<elements.length;i++){
+                elements[i].style.display="none";
+            }
+            btn.textContent="Options +"
+        }else{ 
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].style.display = "block";
+            }
+            btn.textContent = "Options -"
+        }
+    })
+</script>
+<div class="event-grid">
+    {% for event in events %}
+    <div class="event-card">
+        <a href="{{ url_for('event', event_id=event.id) }}">
+            <img src="{{ url_for('static', filename='img/' + event.image_file) }}">
+            <h2 class="subh">{{ event.name }}</h2>
+            <p>{{ event.address }}</p>
+            <p>{{ event.date.strftime('%B %d, %Y') }}</p>
+            <p>$ {{ event.tickets[0].price }} - ${{event.tickets[-1].price}}</p>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

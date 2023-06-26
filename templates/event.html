@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="subh">
+    <h1 class="centered">{{ event.name }}</h1>
+    {% if current_user.is_authenticated %}
+    <form class="centered" action="{{ url_for('add_to_favorites', event_id=event.id) }}" method="POST">
+        {{form_addf.csrf_token}}
+        <button type="submit" class="fbutton">Add to favorites</button>
+    </form>
+    {% endif %}
+</div>
+
+<div class="event-details">
+    <div class="event-inf">
+        <p class="subh"><strong>Information</strong></p>
+        <br>
+        <img src="{{ url_for('static', filename='img/' + event.image_file) }}">
+        <p><strong >Address</strong> <br>{{ event.address }}</p>
+        <p><strong>Date</strong> <br>{{ event.date.strftime('%B %d, %Y') }}</p>
+        <p><strong>Description</strong><br> {{ event.description }}</p>
+        <br>
+    </div>
+    
+    <div class="event-info">
+       
+        {% if current_user.is_authenticated %}
+        <p class="subh"><strong>Tickets</strong></p>
+        <br>
+        <ul>
+        {%for ticket in event.tickets%}
+        <li><strong>{{ticket.name}}</strong> <br>
+            {{ticket.description}} <br>
+        ${{ticket.price}} <br>
+        There are {{ticket.quantity}} tickets remaining.
+        {% if ticket.quantity!=0 %}
+        <form class="centered" action="{{ url_for('add_to_cart', ticket_id=ticket.id) }}" method="POST">
+            {{form_addc.csrf_token}}
+            <button class="centered" type="submit">Add to the cart</button>
+        </form>
+        {% endif %}
+        
+        </li>
+        {%endfor%}
+        </ul>
+        {% else %}
+        <p><strong> Please <a href="{{ url_for('login') }}">login</a> to book tickets for this event.</strong></p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

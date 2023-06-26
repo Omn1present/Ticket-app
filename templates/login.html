@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1 class="subh">Login</h1>
+{% if form.errors %}
+{% for field, errors in form.errors.items() %}
+{% for error in errors %}
+<div class="alert"><span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>{{ error }}
+</div>
+{% endfor %}
+{% endfor %}
+{% endif %}
+<form action="{{ url_for('login') }}" method="POST">
+    {{ form.csrf_token }}
+    {{ form.email.label }} {{ form.email }}
+    {{ form.password.label }} {{ form.password }}
+    <button type="submit">Login</button>
+</form>
+<p>Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+{% endblock %}

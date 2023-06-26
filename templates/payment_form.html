@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="subh">Enter your payment information</h1>
+<form id="payment-form" method="post" action="{{ url_for('pay') }}">
+<input type="hidden" name="payment_intent_id" value="{{ intent.id }}">
+
+  <div id="card-element"></div>
+  <button type="submit" id="submitbtn">
+    <span>Pay ${{ tprice }}</span>
+  </button>
+</form>
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    var stripe = Stripe('pk_test_51Mzn4nL8tf0Jy7LtXxyTAwwVG5NqsNbtI3tRLxURCccau2iL8Vfy56bKVw6aothju1rZmAtPkHgovr18ySL5qQwQ00jMzohdnD');
+    var elements = stripe.elements();
+    var cardElement = elements.create('card');
+    cardElement.mount('#card-element');
+    var submitButton = document.getElementById('submitbtn');
+
+    submitButton.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        stripe.confirmCardPayment('{{ intent.client_secret }}', {
+            payment_method: {
+                card: cardElement
+            }
+        }).then(function (result) {
+            if (result.error) {
+                alert(result.error.message)
+            } else {
+                form=document.getElementById('payment-form')
+                form.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block title %}EventQuiver{% endblock %}</title>
+    {% if session['theme'] == 'light' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% else %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
+    {% endif %}
+</head>
+
+<body>
+    <header>
+        <strong><a id="logo" href="{{ url_for('home') }}">EventQuiver</a></strong>
+        <nav id="navbar">
+            <ul>
+                <li>
+                    <div class="dropdown">
+                        <button class="dropbtn">{{ current_user.username }}</button>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('cart') }}">Cart</a>
+                            <a href="{{ url_for('favorites') }}">Favorites</a>
+                            <a href="{{ url_for('purchase_history') }}">Purchase History</a>
+                            <a href="{{ url_for('settings') }}">Settings</a>
+                            <a href="{{ url_for('logout') }}">Logout</a>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About us</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact us</a></li>
+                {% if current_user.is_authenticated %}
+                {% else %}
+                <li><a href="{{ url_for('register') }}">Register</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                {% endif %}
+                <li id="theme-toggle">
+                    {% if session['theme'] == 'dark' %}
+                    <a href="{{ url_for('toggle_theme', theme='light') }}">Light Mode</a>
+                    {% else %}
+                    <a href="{{ url_for('toggle_theme', theme='dark') }}">Dark Mode</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </nav>
+        <button id="hamburger-btn">&#9776;</button>
+    </header>
+    <nav id="alt-navbar">
+        <ul>
+            
+            
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About us</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact us</a></li>
+            {% if current_user.is_authenticated %}
+            <li><a href="{{ url_for('cart') }}">Cart</a> </li>
+            <li><a href="{{ url_for('favorites') }}">Favorites</a></li>
+            <li><a href="{{ url_for('purchase_history') }}">Purchase History</a> </li>
+            <li><a href="{{ url_for('settings') }}">Settings</a> </li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+            <li><a href="{{ url_for('register') }}">Register</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
+            <li id="theme-toggle">
+                {% if session['theme'] == 'dark' %}
+                <a href="{{ url_for('toggle_theme', theme='light') }}">Light Mode</a>
+                {% else %}
+                <a href="{{ url_for('toggle_theme', theme='dark') }}">Dark Mode</a>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+    <main>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+    <br><br><br> <br>
+    <footer>
+        <p> &copy 2023 EventQuiver</p>
+        <p><a href="{{ url_for('home') }}">Home</a> | <a href="{{ url_for('about') }}">About</a> | <a href="{{ url_for('contact') }}">Contact</a></p>
+    </footer>
+</body>
+<style>
+    
+    #alt-navbar{
+        width: 100%;
+        position: absolute;
+        
+    }
+    #alt-navbar ul{
+        background-color: gray;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: right;
+        font-size: larger;
+        height: 100vh;
+    }
+    
+    #hamburger-btn {
+        display: none;
+        background-color: #333;
+            color:white;
+            border: 0;
+            font-size: large;
+    }
+
+    @media (max-width: 768px) {
+        #navbar ul {
+            display: none;
+        }
+
+        #hamburger-btn {
+            display: block;
+            
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        
+        var navbar = document.getElementById('alt-navbar');
+        var hamburgerBtn = document.getElementById('hamburger-btn');
+        
+        navbar.style.display = 'none';
+        hamburgerBtn.addEventListener('click', function () {
+            if (navbar.style.display === 'block') {
+                navbar.style.display = 'none';
+                hamburgerBtn.innerHTML = "&#9776;"
+            } else {
+                navbar.style.display = 'block';
+                hamburgerBtn.innerHTML = "&times;"
+                
+            }
+        });
+    });
+</script>
+</html>

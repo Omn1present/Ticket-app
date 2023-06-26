@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="subh">Shopping Cart</h1>
+{% if tickets %}
+<table>
+    <thead class="subh">
+        <tr >
+            <th >Event Name</th>
+            <th>Ticket Price</th>
+            <th> Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in tickets %}
+        <tr>
+            <td>{{ item[0].event.name }}</td>
+            <td> ${{ item[0].price }} </td>
+            <td>
+                <form action="{{ url_for('remove_from_cart', ticket_id=item[1]) }}" method="POST">
+                    {{ remove_form.csrf_token }}
+                    <button type="submit">Remove</button>
+                </form> 
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="1"><strong>Total:</strong></td>
+            <td><strong>${{ total_cost }} </strong></td>
+            <td>
+                <form action="{{ url_for('checkout') }}" method="POST">
+                    {{ checkout_form.csrf_token }}
+                    <button type="submit">Checkout</button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<p>Your shopping cart is empty.</p>
+{% endif %}
+{% endblock %}

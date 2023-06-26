@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="subh">Favorites</h1>
+{% if favorite_events %}
+<ul>
+    {% for event in favorite_events %}
+    <li class="favs">
+        <a href="{{ url_for('event', event_id=event.id) }}"><h2>{{ event.name }}</h2></a>
+        <form action="{{ url_for('remove_from_favorites', event_id=event.id) }}" method="POST">
+            {{ form.csrf_token }}
+            <button type="submit">Remove from Favorites</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You haven't added any events to your favorites yet.</p>
+{% endif %}
+{% endblock %}
